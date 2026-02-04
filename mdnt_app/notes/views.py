@@ -33,16 +33,19 @@ def index(request: HttpRequest):
                 note.save()
                 return redirect("index")
         elif action == "check":
-            matches = tool.check(text)
-            grammar_result = []
-            for match in matches:
-                grammar_result.append(
-                    {
-                        "error": match.context,
-                        "message": match.message,
-                        "replacements": match.replacements
-                    }
-                )
+            text_form = forms.TextForm(request.POST)
+            if text_form.is_valid():
+                text = text_form.cleaned_data['text']
+                matches = tool.check(text)
+                grammar_result = []
+                for match in matches:
+                    grammar_result.append(
+                        {
+                            "error": match.context,
+                            "message": match.message,
+                            "replacements": match.replacements
+                        }
+                    )
         elif action == "upload_file":
             file_form = forms.NoteForm(request.POST, request.FILES)
             if file_form.is_valid():
