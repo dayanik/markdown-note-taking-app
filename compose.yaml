@@ -1,4 +1,9 @@
 services:
+  languagetool:
+    image: silviof/docker-languagetool
+    expose:
+      - "8010"
+
   migrate:
     build: ./mdnt_app
     env_file:
@@ -12,6 +17,8 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      LANGUAGE_TOOL_HOST: http://languagetool:8010
     volumes:
       - db_data:/mdnt_app/db
       - media:/mdnt_app/media

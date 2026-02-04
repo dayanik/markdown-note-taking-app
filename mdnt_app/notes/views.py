@@ -1,4 +1,5 @@
 import language_tool_python
+import os
 
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
@@ -7,7 +8,10 @@ from django.http import HttpRequest
 from notes import models, forms
 
 
-tool = language_tool_python.LanguageTool('ru-RU', remote_server=None)
+tool = language_tool_python.LanguageTool(
+    'ru-RU',
+    remote_server=os.getenv("LANGUAGE_TOOL_HOST")
+)
 
 
 def index(request: HttpRequest):
