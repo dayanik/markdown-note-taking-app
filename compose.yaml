@@ -3,6 +3,10 @@ services:
     image: silviof/docker-languagetool
     expose:
       - "8010"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8010/v2/languages || exit 1"]
+      interval: 2s
+      retries: 15
 
   migrate:
     build: ./mdnt_app
@@ -24,6 +28,9 @@ services:
       - media:/mdnt_app/media
     expose:
       - "8000"
+    depends_on:
+      languagetool:
+        condition: service_healthy
 
   nginx:
     image: nginx:alpine
