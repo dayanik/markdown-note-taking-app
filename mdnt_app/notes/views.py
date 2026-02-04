@@ -1,9 +1,10 @@
 import language_tool_python
+import mistune
 import os
 
 from django.core.files.base import ContentFile
-from django.shortcuts import render, redirect
-from django.http import HttpRequest
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpRequest, Http404
 
 from notes import models, forms
 
@@ -66,4 +67,15 @@ def download_note(request: HttpRequest, note_id: int):
 
 
 def html_note(request: HttpRequest, note_id: int):
-    pass
+    try:
+        note = get_object_or_404(models.Note, note_id=note_id)
+        with note.file.open("r", encoding="utf-8") as file:
+            text = file.read()
+        html = mistune.markdown(text)
+    except Http404:
+        context = {"html_text": "that note is not found"}
+    except:
+        context = {"html_text": "that note is not found"}
+
+    context = {"html_text": html}
+    return render(request, "notes/text.html", context=context)
