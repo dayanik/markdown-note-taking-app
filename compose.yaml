@@ -10,11 +10,19 @@ services:
 
   migrate:
     build: ./mdnt_app
+    volumes:
+      - db_data:/mdnt_app/db
+      - media:/mdnt_app/media
     env_file:
       - .env
     environment:
       LANGUAGE_TOOL_HOST: http://languagetool:8010
     command: python manage.py migrate
+    depends_on:
+      languagetool:
+          condition: service_healthy
+    expose:
+      - "8080"
 
   web:
     build:
