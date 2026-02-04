@@ -69,8 +69,8 @@ def download_note(request: HttpRequest, note_id: int):
 def html_note(request: HttpRequest, note_id: int):
     try:
         note = get_object_or_404(models.Note, note_id=note_id)
-        with note.file.open("r", encoding="utf-8") as file:
-            text = file.read()
+        with note.file.open() as file:
+            text = file.read().decode("utf-8")
         html = mistune.markdown(text)
         context = {"html_text": html}
     except Http404:
