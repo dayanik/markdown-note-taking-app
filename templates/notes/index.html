@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'notes/css/styles.css' %}">
+    <title>hello</title>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Отправка markdown текста -->
+    <div class="section">
+      <div class="section-title">Markdown текст</div>
+      <form method="post">
+        {% csrf_token %}
+        {{ text_form.title }}
+        {{ text_form.text }}
+        {% if text_form.text.errors %}
+          <div class="error">
+            {{ text_form.text.errors }}
+          </div>
+        {% endif %}
+        <div class="actions">
+          <button type="submit" name="action" value="save_text">
+            сохранить
+          </button>
+          <button type="submit" name="action" value="check">
+            грамматика
+          </button>
+        </div>
+      </form>
+      {% if grammar_result %}
+        <h3>Грамматические ошибки:</h3>
+        <ul>
+          {% for m in grammar_result %}
+            <li>
+              <strong>Ошибка в контексте:</strong> {{ m.error }}<br>
+              <strong>Сообщение:</strong> {{ m.message }}<br>
+              <strong>Возможные исправления:</strong> {{ m.replacements|join:", " }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+    </div>
+
+    <!-- Загрузка файла -->
+    <div class="section">
+      <div class="section-title">Загрузка файла</div>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ file_form.file }}
+        <div class="actions">
+          <button type="submit" name="action" value="upload_file">
+            Загрузить файл
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Список файлов -->
+    <div class="section">
+      <div class="section-title">Список заметок</div>
+      <div class="files">
+        <ul>
+          {% for note in notes %}
+          <li>{{ forloop.counter }}. {{ note.title }}.md<div>
+              <a href="{% url 'download' note_id=note.note_id %}" class="abtn">скачать</a>
+              <a href="{% url 'text' note_id=note.note_id %}" class="abtn">html-версия</a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
