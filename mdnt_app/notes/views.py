@@ -1,4 +1,4 @@
-#import language_tool_python
+import language_tool_python
 
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from notes import models, forms
 
 
-# tool = language_tool_python.LanguageTool('ru-RU')
+tool = language_tool_python.LanguageTool('ru-RU')
 
 
 def index(request: HttpRequest):
@@ -27,7 +27,6 @@ def index(request: HttpRequest):
                 note.save()
                 return redirect("index")
         elif action == "check":
-            return
             matches = tool.check(text)
             grammar_result = []
             for match in matches:

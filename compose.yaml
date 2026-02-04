@@ -1,0 +1,30 @@
+services:
+  migrate:
+    build: ./mdnt_app
+    command: python manage.py migrate
+
+  web:
+    build:
+      context: ./mdnt_app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db_data:/mdnt_app/db
+      - media:/mdnt_app/media
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - web
+
+volumes:
+  db_data:
+  media:
