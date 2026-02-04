@@ -1,6 +1,8 @@
 services:
   migrate:
     build: ./mdnt_app
+    env_file:
+      - .env
     command: python manage.py migrate
 
   web:
