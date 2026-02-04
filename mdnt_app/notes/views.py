@@ -4,7 +4,7 @@ import os
 
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpRequest, Http404
+from django.http import HttpRequest, Http404, FileResponse
 
 from notes import models, forms
 
@@ -62,11 +62,20 @@ def index(request: HttpRequest):
     return render(request, "notes/index.html", context=context)
 
 
-def download_note(request: HttpRequest, note_id: int):
-    pass
+def download_note_file(request: HttpRequest, note_id: int):
+    note = get_object_or_404(models.Note, note_id=note_id)
+    file_path = note.file.path
+    if os.path.exists(file_path):
+        return FileResponse(
+            open(file_path, "rb"), 
+            as_attachment=True,
+            filename=os.path.basename(file_path)
+        )
+    else:
+        raise Http404("файд не найден")
 
 
-def html_note(request: HttpRequest, note_id: int):
+def get_html_note(request: HttpRequest, note_id: int):
     try:
         note = get_object_or_404(models.Note, note_id=note_id)
         with note.file.open() as file:
