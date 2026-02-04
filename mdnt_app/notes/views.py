@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from notes import models, forms
 
 
-tool = language_tool_python.LanguageTool('ru-RU')
+tool = language_tool_python.LanguageTool('ru-RU', remote_server=None)
 
 
 def index(request: HttpRequest):

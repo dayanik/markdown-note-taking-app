@@ -77,11 +77,11 @@ WSGI_APPLICATION = 'mdnt_app.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+DATABASES_ROOT = os.getenv("DATABASES_ROOT")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / os.getenv("DATABASES_ROOT"),
+        'NAME': BASE_DIR / DATABASES_ROOT,
     }
 }
 
