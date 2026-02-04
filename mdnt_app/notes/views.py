@@ -17,6 +17,8 @@ tool = language_tool_python.LanguageTool(
 def index(request: HttpRequest):
     notes = models.Note.objects.all()
     grammar_result = None
+    text_form = forms.TextForm()
+    file_form = forms.NoteForm()
     if request.method == "POST":
         action = request.POST.get("action")
 
@@ -46,10 +48,7 @@ def index(request: HttpRequest):
             if file_form.is_valid():
                 file_form.save()
             file_form = forms.NoteForm()
-                
-    else:
-        text_form = forms.TextForm()
-        file_form = forms.NoteForm()
+
     context = {
         "notes": notes, 
         "text_form": text_form, 
