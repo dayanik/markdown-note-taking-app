@@ -72,10 +72,10 @@ def html_note(request: HttpRequest, note_id: int):
         with note.file.open("r", encoding="utf-8") as file:
             text = file.read()
         html = mistune.markdown(text)
+        context = {"html_text": html}
     except Http404:
         context = {"html_text": "that note is not found"}
     except:
-        context = {"html_text": "that note is not found"}
+        context = {"html_text": "that file is not found"}
 
-    context = {"html_text": html}
     return render(request, "notes/text.html", context=context)
